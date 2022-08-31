@@ -30,11 +30,25 @@ function lbjsonld_add_sublevel_menu() {
 add_action( 'admin_menu', 'lbjsonld_add_sublevel_menu' );
 
 
+// register plugin settings callbacks
+function lbjsonld_callback_section_details() {
+  echo '<p>Enter your business details.</p>';
+}
+
+
 // register plugin settings
 function lbjsonld_register_settings() {
   register_setting(
     'lbjsonld_options',
     'lbjsonld_options'
+  );
+
+  // Add sections to the settings
+  add_settings_section(
+    'lbjsonld_section_details',
+    'Business Details',
+    'lbjsonld_callback_section_details',
+    'local-business-json-ld'
   );
 }
 add_action( 'admin_init', 'lbjsonld_register_settings' );
