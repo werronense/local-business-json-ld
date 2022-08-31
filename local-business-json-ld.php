@@ -36,6 +36,19 @@ function lbjsonld_callback_section_details() {
 }
 
 
+// callback: text field
+function lbjsonld_callback_field_text( $args ) {
+  $options = get_option( 'lbjsonld_options', lbjsonld_options_default() );
+
+  $id = isset( $args['id'] ) ? $args['id'] : '';
+  $label = isset( $args['label'] ) ? $args['label'] : '';
+  $value = isset( $options[$id] ) ? sanitize_text_field( $options[$id] ) : '';
+
+  echo '<input id="lbjsonld_options_' . $id . '" name="lbjsonld_options[' . $id . ']" type="text" size="40" value=""' . $value . '"><br>';
+  echo '<label for="lbjsonld_options_' . $id . '">' . $label . '</label>';
+}
+
+
 // register plugin settings
 function lbjsonld_register_settings() {
   register_setting(
@@ -49,6 +62,15 @@ function lbjsonld_register_settings() {
     'Business Details',
     'lbjsonld_callback_section_details',
     'local-business-json-ld'
+  );
+
+  add_settings_field(
+    'business_name',
+    'Business Name',
+    'lbjsonld_callback_field_text',
+    'local-business-json-ld',
+    'lbjsonld_section_details',
+    [ 'id' => 'business_name', 'label' => 'The name of your business.' ]
   );
 }
 add_action( 'admin_init', 'lbjsonld_register_settings' );
@@ -75,4 +97,12 @@ function lbjsonld_display_settings_page() {
   </div>
 
   <?php
+}
+
+
+// default plugin options
+function lbjsonld_options_default() {
+  return array(
+    'business_name' => 'Business Name',
+  );
 }
